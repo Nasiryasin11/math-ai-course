@@ -10,3 +10,10 @@ y = np.sin(x)
 plt.plot(x, y)
 plt.title("Sine wave")
 plt.show()
+# %%
+# %%
+print(type(x))
+print(x.shape)
+print(y.shape)
+print(y[:5])
+# %%
