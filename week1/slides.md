@@ -1,6 +1,3 @@
-mkdir -p week1
-
-cat > week1/slides.md <<'EOF'
 ---
 marp: true
 theme: default
