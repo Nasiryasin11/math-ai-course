@@ -1,7 +1,8 @@
 # Systems of Equations
-A system of equations is a collection of two or more equations that use the same variables. The goal is to find the value of each variable that makes all equations true at the same time. In algebra, one of the most common examples is a system of two linear equations with two variables, usually written using $x$ and $y$. A solution to the system is an ordered pair $(x,y)$ that satisfies every equation in the system.
 
-For example, a simple system can be written as:
+A system of equations is a collection of two or more equations that use the same variables. The goal is to find the value of each variable that makes all equations true at the same time. In algebra, one common example is a system of two linear equations with two variables, usually written using $x$ and $y$. A solution to the system is an ordered pair $(x,y)$ that satisfies every equation in the system.
+
+For example, a simple system of equations can be written as:
 
 $$
 \begin{cases}
@@ -11,8 +12,7 @@ x-y=5 \\
 $$
 
 This system asks us to find one value of $x$ and one value of $y$ that make both equations true. Systems of equations are useful because many real-world problems involve more than one condition. For example, in engineering, economics, physics, and data science, we often need to solve several relationships at the same time.
-
-One common method for solving systems is the substitution method. In this method, we solve one equation for one variable and substitute that expression into the other equation. For example, from the equation $x-y=5$, we can solve for $x$:
+One common method for solving systems is the substitution method. In this method, we solve one equation for one variable and substitute that expression into the other equation. From the equation $x-y=5$, we can solve for $x$ as follows:
 
 $$
 x=y+5
@@ -36,19 +36,25 @@ $$
 3y=-3
 $$
 
-So:
+Therefore:
 
 $$
 y=-1
 $$
 
-After finding $y$, we substitute back into $x=y+5$. This gives $x=4$. Therefore, the solution is:
+After finding $y$, we substitute back into $x=y+5$:
+
+$$
+x=-1+5=4
+$$
+
+Therefore, the solution is:
 
 $$
 (x,y)=(4,-1)
 $$
 
-Another important method is the elimination method. In this method, we add or subtract equations to eliminate one variable. This is useful when the coefficients of one variable are opposites or can be made opposites by multiplication.
+Another important method is the elimination method. In this method, we add or subtract equations to eliminate one variable. This method is useful when the coefficients of one variable are opposites, or when they can be made opposites by multiplication.
 
 A system can have one solution, no solution, or infinitely many solutions. If two lines intersect at exactly one point, the system has one solution. If the lines are parallel, the system has no solution. If the equations represent the same line, the system has infinitely many solutions.
 
