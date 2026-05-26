@@ -1,8 +1,4 @@
-mkdir -p week1
-
-cat > week1/concept.md <<'EOF'
 # Systems of Equations
-
 A system of equations is a collection of two or more equations that use the same variables. The goal is to find the value of each variable that makes all equations true at the same time. In algebra, one of the most common examples is a system of two linear equations with two variables, usually written using $x$ and $y$. A solution to the system is an ordered pair $(x,y)$ that satisfies every equation in the system.
 
 For example, a simple system can be written as:
@@ -57,4 +53,3 @@ Another important method is the elimination method. In this method, we add or su
 A system can have one solution, no solution, or infinitely many solutions. If two lines intersect at exactly one point, the system has one solution. If the lines are parallel, the system has no solution. If the equations represent the same line, the system has infinitely many solutions.
 
 Overall, systems of equations are important because they teach us how to solve multiple mathematical conditions together. They also provide a foundation for more advanced topics such as matrices, linear algebra, optimization, and mathematical modeling.
-EOF

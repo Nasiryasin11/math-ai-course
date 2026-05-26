@@ -147,3 +147,22 @@ A system of linear equations can have:
 - **Infinitely many solutions**: the equations represent the same line
 
 These outcomes help describe the relationship between the equations.
+
+---
+
+## Summary
+
+Systems of equations help us solve multiple equations with the same variables at the same time.
+
+Key ideas:
+
+- A solution must satisfy all equations.
+- The **substitution method** replaces one variable with an equivalent expression.
+- The **elimination method** removes one variable by adding or subtracting equations.
+- A system can have **one solution**, **no solution**, or **infinitely many solutions**.
+
+Example solution:
+
+$$
+\boxed{(x,y)=(4,-1)}
+$$
