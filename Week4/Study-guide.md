@@ -126,12 +126,19 @@ $$A=\begin{pmatrix}0&1\\1&0\end{pmatrix}.$$
 Give $U, \Sigma,$ and $V^T$.
 
 ### Solution
+Compute $A^T A = I$, so the eigenvalues are $1,1$ and the singular values are $\sigma_1=1,\ \sigma_2=1$.
 
-Compute $A^TA=I$, so eigenvalues are $1,1$, and singular values are $\sigma_1=1,\sigma_2=1$. Right singular vectors are eigenvectors of $A^TA$, take the standard basis $e_1,e_2$; compute left singular vectors $u_i=\sigma_i^{-1}A v_i$:
-$$A e_1 = e_2,\quad A e_2 = e_1.$$ 
-Hence one valid choice is
-$$U=V=\begin{pmatrix}0&1\\1&0\end{pmatrix},\qquad \Sigma=\begin{pmatrix}1&0\\0&1\end{pmatrix},$$
-because $A=U\Sigma V^T=U V^T= A$ (here $U=V=A$). Another common choice is $U=V=I$ with $\Sigma=A$, but the canonical SVD uses orthonormal singular vectors.
+One convenient canonical choice is to take the right singular vectors
+$$v_1=e_1,\\ v_2=e_2,$$
+so
+$$V=I. $$
+Then the left singular vectors are
+$$u_i = A v_i,\qquad u_1 = e_2,\ u_2 = e_1,$$
+giving
+$$U=\begin{pmatrix}0&1\\1&0\end{pmatrix}=A,\qquad \Sigma=\begin{pmatrix}1&0\\0&1\end{pmatrix}=I.$$
+Indeed $A=U\Sigma V^T = A\cdot I\cdot I = A$.
+
+Remark: because the singular values are equal there is non‑uniqueness of singular vectors (any orthonormal bases of the corresponding eigenspaces give valid choices). Also note that a matrix placed in the $\Sigma$ slot must be diagonal with nonnegative entries, so the suggestion $\Sigma=A$ is not a valid SVD.
 
 ### Problem 2 (Theory — Frobenius Eckart–Young)
 
