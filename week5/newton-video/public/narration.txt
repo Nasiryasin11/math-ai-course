@@ -1,0 +1,7 @@
+Newton’s Method finds roots using tangent lines.
+
+We begin by introducing the geometric intuition: start with a guess x_n, draw the tangent to y = f(x), and use its x-intercept as the next estimate x_{n+1}.
+
+Then we derive the update rule. Setting the tangent line y = f(x_n) + f'(x_n)(x - x_n) equal to zero gives the iteration formula x_{n+1} = x_n - f(x_n)/f'(x_n). For f(x) = x^2 - 2, this becomes x_{n+1} = x_n - (x_n^2 - 2)/(2 x_n).
+
+Finally, we summarize the method: Newton’s Method approximates roots of f(x) = 0 by updating x_n with derivative information. A good starting guess and a smooth function help it converge, and with x_0 = 1 for f(x) = x^2 - 2, the iterates approach √2.

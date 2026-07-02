@@ -1,1 +1,9 @@
 .DS_Store
+
+# Node / Remotion
+node_modules/
+week5/newton-video/node_modules/
+
+# Cache
+.cache/
+.DS_Store
