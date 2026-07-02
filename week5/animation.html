@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Newton's Method Animation</title>
+
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f7f9fc;
+      color: #1f2937;
+      margin: 0;
+      padding: 30px;
+    }
+
+    .container {
+      max-width: 1000px;
+      margin: auto;
+      background: white;
+      padding: 25px;
+      border-radius: 14px;
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+    }
+
+    h1 {
+      color: #163b73;
+      margin-bottom: 8px;
+    }
+
+    .description {
+      font-size: 18px;
+      margin-bottom: 20px;
+    }
+
+    canvas {
+      width: 100%;
+      border: 1px solid #d1d5db;
+      border-radius: 10px;
+      background: #ffffff;
+    }
+
+    .controls {
+      margin-top: 18px;
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    button {
+      background: #163b73;
+      color: white;
+      border: none;
+      padding: 10px 18px;
+      border-radius: 8px;
+      font-size: 16px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background: #0f2d56;
+    }
+
+    .formula {
+      margin-top: 18px;
+      padding: 14px;
+      background: #f3f4f6;
+      border-left: 5px solid #163b73;
+      font-size: 20px;
+    }
+
+    .info {
+      margin-top: 18px;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 12px;
+    }
+
+    .card {
+      background: #eef3fb;
+      padding: 12px;
+      border-radius: 8px;
+      font-size: 16px;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+    <h1>Newton's Method: Finding Roots Using Tangent Lines</h1>
+
+    <p class="description">
+      This interactive animation shows how Newton's Method uses tangent lines to approximate the root of
+      <strong>f(x) = x² − 2</strong>.
+    </p>
+
+    <canvas id="canvas" width="900" height="500"></canvas>
+
+    <div class="controls">
+      <button onclick="nextIteration()">Next Iteration</button>
+      <button onclick="resetAnimation()">Reset</button>
+    </div>
+
+    <div class="formula">
+      Newton's Method Formula:
+      x<sub>n+1</sub> = x<sub>n</sub> −
+      f(x<sub>n</sub>) / f'(x<sub>n</sub>)
+    </div>
+
+    <div class="info">
+      <div class="card">Iteration: <span id="iteration">0</span></div>
+      <div class="card">Current approximation x<sub>n</sub>: <span id="xn">1.000000</span></div>
+      <div class="card">f(x<sub>n</sub>): <span id="fxn">-1.000000</span></div>
+      <div class="card">Next approximation x<sub>n+1</sub>: <span id="xnext">1.500000</span></div>
+    </div>
+  </div>
+
+  <script>
+    const canvas = document.getElementById("canvas");
+    const ctx = canvas.getContext("2d");
+
+    let xn = 1;
+    let iteration = 0;
+
+    const xMin = -0.3;
+    const xMax = 2.3;
+    const yMin = -2.5;
+    const yMax = 3.5;
+
+    function f(x) {
+      return x * x - 2;
+    }
+
+    function fp(x) {
+      return 2 * x;
+    }
+
+    function newtonNext(x) {
+      return x - f(x) / fp(x);
+    }
+
+    function toCanvasX(x) {
+      return ((x - xMin) / (xMax - xMin)) * canvas.width;
+    }
+
+    function toCanvasY(y) {
+      return canvas.height - ((y - yMin) / (yMax - yMin)) * canvas.height;
+    }
+
+    function drawAxes() {
+      ctx.strokeStyle = "#9ca3af";
+      ctx.lineWidth = 1;
+
+      const xAxisY = toCanvasY(0);
+      ctx.beginPath();
+      ctx.moveTo(0, xAxisY);
+      ctx.lineTo(canvas.width, xAxisY);
+      ctx.stroke();
+
+      const yAxisX = toCanvasX(0);
+      ctx.beginPath();
+      ctx.moveTo(yAxisX, 0);
+      ctx.lineTo(yAxisX, canvas.height);
+      ctx.stroke();
+
+      ctx.fillStyle = "#374151";
+      ctx.font = "14px Arial";
+      ctx.fillText("x-axis", canvas.width - 60, xAxisY - 8);
+      ctx.fillText("y-axis", yAxisX + 8, 18);
+    }
+
+    function drawFunction() {
+      ctx.strokeStyle = "#163b73";
+      ctx.lineWidth = 3;
+      ctx.beginPath();
+
+      for (let px = 0; px <= canvas.width; px++) {
+        const x = xMin + (px / canvas.width) * (xMax - xMin);
+        const y = f(x);
+        const cy = toCanvasY(y);
+
+        if (px === 0) {
+          ctx.moveTo(px, cy);
+        } else {
+          ctx.lineTo(px, cy);
+        }
+      }
+
+      ctx.stroke();
+
+      ctx.fillStyle = "#163b73";
+      ctx.font = "18px Arial";
+      ctx.fillText("f(x) = x² − 2", toCanvasX(1.45), toCanvasY(0.6));
+    }
+
+    function drawTangent() {
+      const slope = fp(xn);
+      const yn = f(xn);
+      const xNext = newtonNext(xn);
+
+      const x1 = xMin;
+      const y1 = yn + slope * (x1 - xn);
+      const x2 = xMax;
+      const y2 = yn + slope * (x2 - xn);
+
+      ctx.strokeStyle = "#dc2626";
+      ctx.lineWidth = 2;
+      ctx.setLineDash([8, 6]);
+      ctx.beginPath();
+      ctx.moveTo(toCanvasX(x1), toCanvasY(y1));
+      ctx.lineTo(toCanvasX(x2), toCanvasY(y2));
+      ctx.stroke();
+      ctx.setLineDash([]);
+
+      ctx.fillStyle = "#059669";
+      ctx.beginPath();
+      ctx.arc(toCanvasX(xNext), toCanvasY(0), 7, 0, 2 * Math.PI);
+      ctx.fill();
+
+      ctx.fillStyle = "#059669";
+      ctx.font = "16px Arial";
+      ctx.fillText("xₙ₊₁", toCanvasX(xNext) + 8, toCanvasY(0) - 8);
+    }
+
+    function drawCurrentPoint() {
+      const yn = f(xn);
+
+      ctx.fillStyle = "#ef4444";
+      ctx.beginPath();
+      ctx.arc(toCanvasX(xn), toCanvasY(yn), 7, 0, 2 * Math.PI);
+      ctx.fill();
+
+      ctx.fillStyle = "#ef4444";
+      ctx.font = "16px Arial";
+      ctx.fillText("(xₙ, f(xₙ))", toCanvasX(xn) + 10, toCanvasY(yn) - 10);
+    }
+
+    function updateInfo() {
+      const xNext = newtonNext(xn);
+
+      document.getElementById("iteration").textContent = iteration;
+      document.getElementById("xn").textContent = xn.toFixed(6);
+      document.getElementById("fxn").textContent = f(xn).toFixed(6);
+      document.getElementById("xnext").textContent = xNext.toFixed(6);
+    }
+
+    function draw() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      drawAxes();
+      drawFunction();
+      drawTangent();
+      drawCurrentPoint();
+      updateInfo();
+    }
+
+    function nextIteration() {
+      if (Math.abs(fp(xn)) < 1e-10) {
+        alert("Derivative is too close to zero. Newton's Method cannot continue.");
+        return;
+      }
+
+      xn = newtonNext(xn);
+      iteration += 1;
+      draw();
+    }
+
+    function resetAnimation() {
+      xn = 1;
+      iteration = 0;
+      draw();
+    }
+
+    draw();
+  </script>
+</body>
+</html>
