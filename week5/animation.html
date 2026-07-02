@@ -15,7 +15,7 @@
     }
 
     .container {
-      max-width: 1000px;
+      max-width: 1050px;
       margin: auto;
       background: white;
       padding: 25px;
@@ -31,13 +31,14 @@
     .description {
       font-size: 18px;
       margin-bottom: 20px;
+      line-height: 1.5;
     }
 
     canvas {
       width: 100%;
       border: 1px solid #d1d5db;
       border-radius: 10px;
-      background: #ffffff;
+      background: white;
     }
 
     .controls {
@@ -61,12 +62,18 @@
       background: #0f2d56;
     }
 
+    button:disabled {
+      background: #9ca3af;
+      cursor: not-allowed;
+    }
+
     .formula {
       margin-top: 18px;
       padding: 14px;
       background: #f3f4f6;
       border-left: 5px solid #163b73;
       font-size: 20px;
+      line-height: 1.5;
     }
 
     .info {
@@ -82,6 +89,34 @@
       border-radius: 8px;
       font-size: 16px;
     }
+
+    .status {
+      margin-top: 18px;
+      padding: 12px;
+      border-radius: 8px;
+      background: #ecfdf5;
+      color: #065f46;
+      font-weight: bold;
+      display: none;
+    }
+
+    table {
+      width: 100%;
+      margin-top: 18px;
+      border-collapse: collapse;
+      font-size: 15px;
+    }
+
+    th, td {
+      border: 1px solid #d1d5db;
+      padding: 8px;
+      text-align: center;
+    }
+
+    th {
+      background: #eef3fb;
+      color: #163b73;
+    }
   </style>
 </head>
 
@@ -91,20 +126,21 @@
 
     <p class="description">
       This interactive animation shows how Newton's Method uses tangent lines to approximate the root of
-      <strong>f(x) = x² − 2</strong>.
+      <strong>f(x) = x² − 2</strong>. Starting from <strong>x₀ = 1</strong>, each click draws the tangent line
+      and updates the approximation.
     </p>
 
     <canvas id="canvas" width="900" height="500"></canvas>
 
     <div class="controls">
-      <button onclick="nextIteration()">Next Iteration</button>
+      <button id="nextBtn" onclick="nextIteration()">Next Iteration</button>
       <button onclick="resetAnimation()">Reset</button>
     </div>
 
     <div class="formula">
       Newton's Method Formula:
-      x<sub>n+1</sub> = x<sub>n</sub> −
-      f(x<sub>n</sub>) / f'(x<sub>n</sub>)
+      <br>
+      <strong>x<sub>n+1</sub> = x<sub>n</sub> − f(x<sub>n</sub>) / f'(x<sub>n</sub>)</strong>
     </div>
 
     <div class="info">
@@ -113,14 +149,38 @@
       <div class="card">f(x<sub>n</sub>): <span id="fxn">-1.000000</span></div>
       <div class="card">Next approximation x<sub>n+1</sub>: <span id="xnext">1.500000</span></div>
     </div>
+
+    <div id="status" class="status">
+      The method has converged: f(xₙ) is approximately zero.
+    </div>
+
+    <table>
+      <thead>
+        <tr>
+          <th>n</th>
+          <th>xₙ</th>
+          <th>f(xₙ)</th>
+          <th>xₙ₊₁</th>
+        </tr>
+      </thead>
+      <tbody id="history"></tbody>
+    </table>
   </div>
 
   <script>
     const canvas = document.getElementById("canvas");
     const ctx = canvas.getContext("2d");
+    const nextBtn = document.getElementById("nextBtn");
+    const statusBox = document.getElementById("status");
+    const historyBody = document.getElementById("history");
 
     let xn = 1;
     let iteration = 0;
+    let converged = false;
+    let history = [];
+
+    const exactRoot = Math.sqrt(2);
+    const tolerance = 1e-6;
 
     const xMin = -0.3;
     const xMax = 2.3;
@@ -145,6 +205,13 @@
 
     function toCanvasY(y) {
       return canvas.height - ((y - yMin) / (yMax - yMin)) * canvas.height;
+    }
+
+    function formatNumber(value) {
+      if (Math.abs(value) < 1e-5 && value !== 0) {
+        return value.toExponential(2);
+      }
+      return value.toFixed(6);
     }
 
     function drawAxes() {
@@ -193,6 +260,24 @@
       ctx.fillText("f(x) = x² − 2", toCanvasX(1.45), toCanvasY(0.6));
     }
 
+    function drawExactRoot() {
+      const rootX = toCanvasX(exactRoot);
+      const axisY = toCanvasY(0);
+
+      ctx.strokeStyle = "#f59e0b";
+      ctx.lineWidth = 2;
+      ctx.setLineDash([4, 4]);
+      ctx.beginPath();
+      ctx.moveTo(rootX, 0);
+      ctx.lineTo(rootX, canvas.height);
+      ctx.stroke();
+      ctx.setLineDash([]);
+
+      ctx.fillStyle = "#f59e0b";
+      ctx.font = "16px Arial";
+      ctx.fillText("exact root √2", rootX + 8, axisY + 24);
+    }
+
     function drawTangent() {
       const slope = fp(xn);
       const yn = f(xn);
@@ -239,27 +324,67 @@
       const xNext = newtonNext(xn);
 
       document.getElementById("iteration").textContent = iteration;
-      document.getElementById("xn").textContent = xn.toFixed(6);
-      document.getElementById("fxn").textContent = f(xn).toFixed(6);
-      document.getElementById("xnext").textContent = xNext.toFixed(6);
+      document.getElementById("xn").textContent = formatNumber(xn);
+      document.getElementById("fxn").textContent = formatNumber(f(xn));
+      document.getElementById("xnext").textContent = formatNumber(xNext);
+
+      if (Math.abs(f(xn)) < tolerance) {
+        statusBox.style.display = "block";
+        nextBtn.disabled = true;
+        converged = true;
+      } else {
+        statusBox.style.display = "none";
+        nextBtn.disabled = false;
+        converged = false;
+      }
+    }
+
+    function updateHistory() {
+      historyBody.innerHTML = "";
+
+      history.forEach(row => {
+        const tr = document.createElement("tr");
+        tr.innerHTML = `
+          <td>${row.n}</td>
+          <td>${formatNumber(row.xn)}</td>
+          <td>${formatNumber(row.fxn)}</td>
+          <td>${formatNumber(row.xnext)}</td>
+        `;
+        historyBody.appendChild(tr);
+      });
     }
 
     function draw() {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
       drawAxes();
       drawFunction();
+      drawExactRoot();
       drawTangent();
       drawCurrentPoint();
       updateInfo();
+      updateHistory();
     }
 
     function nextIteration() {
+      if (converged) {
+        return;
+      }
+
       if (Math.abs(fp(xn)) < 1e-10) {
         alert("Derivative is too close to zero. Newton's Method cannot continue.");
         return;
       }
 
-      xn = newtonNext(xn);
+      const xNext = newtonNext(xn);
+
+      history.push({
+        n: iteration,
+        xn: xn,
+        fxn: f(xn),
+        xnext: xNext
+      });
+
+      xn = xNext;
       iteration += 1;
       draw();
     }
@@ -267,6 +392,10 @@
     function resetAnimation() {
       xn = 1;
       iteration = 0;
+      converged = false;
+      history = [];
+      nextBtn.disabled = false;
+      statusBox.style.display = "none";
       draw();
     }
 
