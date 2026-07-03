@@ -1,0 +1,19 @@
+# Capstone Reflection
+
+## 1. How did your workflow change during this course?
+
+Before this course, my research workflow was mostly manual. I searched for papers one by one on Google Scholar and then cited them directly using Harvard style. I did the same for my two research articles and both of my master projects, downloaded PDFs, read them separately, and then tried to organize the literature review after reading. During this course, my workflow became more systematic because I used Zotero to organize references, NotebookLM to synthesize uploaded papers, and Copilot Agent Mode with a research-pipeline skill to connect the references, themes, and gaps into a draft introduction. For example, before the course I would have written the introduction directly from scattered notes, but in this capstone I first built a Zotero collection of ten papers, generated a NotebookLM synthesis of key themes and open problems, and then used that structured output to write `capstone/introduction.md`.
+
+## 2. What could the AI tools NOT do well?
+
+The AI tools were helpful for organizing and drafting, but they did not always handle citation metadata correctly. A specific example was the Padway and Nishikawa paper, which Zotero MCP initially returned as `n.d.` because the year was missing from the Zotero metadata. I had to manually open the paper in Zotero, change the item type to conference paper, add the year 2022, correct the conference information, and then re-export `capstone/references.bib`. 
+Another example was the Hyman et al. paper on mimetic finite difference methods. In Zotero, the attachment row still appeared as a generic `PDF`, so I had to manually check the parent item metadata and the filename field to confirm that the paper was correctly listed as *Mimetic Finite Difference Methods for Diffusion Equations* by Hyman, Morel, Shashkov, and Steinberg, published in 2002. This showed me that AI tools and reference managers can speed up research organization, but citation details, publication years, and metadata still require manual verification.
+
+## 3. Which single skill or agent feature had the biggest impact on your work, and why?
+
+The research-pipeline skill used inside Copilot Agent Mode had the biggest impact on my work because it gave me a repeatable process for moving from papers to a structured research draft. Instead of simply asking Copilot to “write an introduction,” the skill guided Copilot to use Zotero MCP results, NotebookLM synthesis, citation checking, and gap analysis in a more organized way. Copilot Agent Mode was helpful because it could work across my project files, help create and revise `capstone/introduction.md`, and connect the literature synthesis with the MCP log and references. This was especially useful in the capstone because it helped me connect several related topics—entropy-stable schemes, positivity preservation, mimetic finite differences, first-order diffusion reformulations, and hyperbolic Navier-Stokes solvers—into one coherent research direction.
+
+
+## 4. What would you build or automate next, now that you know how to create skills?
+
+Next, I would build a webpage-generation skill that helps turn research notes, references, and project summaries into a clean academic webpage. This would be useful for my own work because I could use the skill to create a personal research page that summarizes my projects, publications, skills, and current research direction. Since I am also president of the SIAM chapter, I would like to build a similar skill for creating and updating a SIAM chapter webpage with events, officer information, announcements, seminar summaries, and useful resources for students. This would extend the research-pipeline idea from writing papers to building public-facing academic and professional communication tools.
